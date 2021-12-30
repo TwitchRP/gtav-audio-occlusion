@@ -6,6 +6,7 @@ import Node from './node';
 import PathNodeItem from './pathNodeitem';
 import Path from './path';
 import { Big } from 'big.js';
+import { BigVector3 } from '../../files/codewalker/vector3';
 
 export interface PortalEntity {
   linkType: number;
@@ -60,7 +61,7 @@ export default class AudioOcclusion {
   }
 
   private getOcclusionHash(): number {
-    const pos = this.interior.position;
+    const pos = new BigVector3(this.interior.position);
 
     let archetypeNameHash: number;
 

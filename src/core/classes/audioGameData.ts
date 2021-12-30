@@ -2,6 +2,8 @@ import AudioDynamixData from './audioDynamixData';
 
 import Interior from './interior';
 
+import { BigVector3 } from '../files/codewalker/vector3';
+
 interface AmbientZone {
   name: string;
   outerPos: Vector3;
@@ -56,24 +58,18 @@ export default class AudioGameData {
   }
 
   private getAmbientZone(): AmbientZone {
-    const boxSize = {
-      x: this.interior.entitiesExtentsMax.x - this.interior.entitiesExtentsMin.x,
-      y: this.interior.entitiesExtentsMax.y - this.interior.entitiesExtentsMin.y,
-      z: this.interior.entitiesExtentsMax.z - this.interior.entitiesExtentsMin.z,
-    };
+    const min = new BigVector3(this.interior.entitiesExtentsMax);
+    const max = new BigVector3(this.interior.entitiesExtentsMin);
+    const boxSize = min.minus(max);
 
-    const center = {
-      x: this.interior.entitiesExtentsMin.x + boxSize.x / 2,
-      y: this.interior.entitiesExtentsMin.y + boxSize.y / 2,
-      z: this.interior.entitiesExtentsMin.z + boxSize.z / 2,
-    };
+    const center = min.plus(boxSize.div(2));
 
     return {
       name: this.interior.name + '_az',
-      outerPos: { x: center.x, y: center.y, z: center.z },
-      outerSize: { x: boxSize.x + 1.0, y: boxSize.y + 1.0, z: boxSize.z + 1.0 },
-      innerPos: { x: center.x, y: center.y, z: center.z },
-      innerSize: { x: boxSize.x, y: boxSize.y, z: boxSize.z },
+      outerPos: center.toVector3(),
+      outerSize: boxSize.add(1.0).toVector3(),
+      innerPos: center.toVector3(),
+      innerSize: boxSize.toVector3(),
       unkHash01: this.audioDynamixData.scene.name,
     };
   }

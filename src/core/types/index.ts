@@ -1,7 +1,6 @@
-import { Big } from "big.js";
-
-interface Vector3 {
-  x: Big;
-  y: Big;
-  z: Big;
+interface Vector3
+{
+  x: string;
+  y: string;
+  z: string;
 }
