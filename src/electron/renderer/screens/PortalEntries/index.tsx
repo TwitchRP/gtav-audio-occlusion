@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { ipcRenderer } from 'electron';
 
+import {firstBy} from "thenby";
+
 import { PortalInfo } from '../../../../core/classes/audioOcclusion';
 
 import { TableContainer } from './styles';
@@ -25,8 +27,9 @@ const PortalEntries = () => {
       const _portalEntries: PortalInfo[] = await ipcRenderer.invoke('getPortalEntries');
 
       if (_portalEntries) {
-        _portalEntries.sort((a, b) => a.index - b.index);
-
+        _portalEntries.sort(
+          firstBy("roomIdx").thenBy("roomPortalIdx").thenBy("destRoomIdx").thenBy("index")
+        )
         setPortalEntries(_portalEntries);
       }
     })();
