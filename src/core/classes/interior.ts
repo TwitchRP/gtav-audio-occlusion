@@ -3,6 +3,7 @@ import { CMapData } from '../files/codewalker/ymap';
 
 export interface Entity {
   hash: number;
+  name: string;
   isDoor: boolean;
   isGlass: boolean;
 }

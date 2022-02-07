@@ -3,6 +3,7 @@ import { XMLDataEntry, XMLEntry } from './index';
 interface CEntityDef {
   $: { type: string };
   archetypeName: string;
+  flags: XMLDataEntry<{ value: string }>;
 }
 
 interface CMloRoomDef {
@@ -42,6 +43,7 @@ export interface Ytyp {
 
 export interface MloEntity {
   hash: number;
+  name: string;
   isDoor: boolean;
   isGlass: boolean;
 }

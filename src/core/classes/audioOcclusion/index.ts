@@ -10,6 +10,7 @@ export interface PortalEntity {
   linkType: number;
   maxOcclusion: number;
   entityModelHashkey: number;
+  entityModel: string;
   isDoor: boolean;
   isGlass: boolean;
 }
@@ -75,27 +76,47 @@ export default class AudioOcclusion {
   }
 
   private getPortalsEntities(): PortalEntity[][] {
-    return this.interior.portals.map(portal =>
-      portal.attachedObjects.map(attachedObject => {
-        let maxOcclusion = 0.0;
+    return this.interior.portals.map((portal, idx) => {
+      if (portal.attachedObjects.length > 0) {
+        let portalEntities = portal.attachedObjects.map(attachedObject => {
+          let maxOcclusion = 0.0;
 
-        if (attachedObject.isDoor) {
-          maxOcclusion = 0.7;
+          if (attachedObject.isDoor) {
+            maxOcclusion = 0.7;
+          }
+
+          if (attachedObject.isGlass) {
+            maxOcclusion = 0.4;
+          }
+
+          return {
+            linkType: 1,
+            maxOcclusion,
+            entityModelHashkey: attachedObject.hash,
+            entityModel: attachedObject.name,
+            isDoor: attachedObject.isDoor,
+            isGlass: attachedObject.isGlass,
+          };
+        })
+
+        if (portalEntities.some(e=>e.isDoor)) // if there are doors, there should be no windows?
+        {
+          return portalEntities.filter(e=>e.isDoor);
         }
-
-        if (attachedObject.isGlass) {
-          maxOcclusion = 0.4;
-        }
-
-        return {
-          linkType: 1,
-          maxOcclusion,
-          entityModelHashkey: attachedObject.hash,
-          isDoor: attachedObject.isDoor,
-          isGlass: attachedObject.isGlass,
-        };
-      }),
-    );
+        return portalEntities
+      }
+      else
+      {
+        return [/*{
+          linkType: 9,
+          maxOcclusion: 0.0,
+          entityModelHashkey: null,
+          entityModel: null,
+          isDoor: false,
+          isGlass: false,
+        }*/];
+      }
+    });
   }
 
   private getPortalInfoList(): PortalInfo[] {
@@ -112,7 +133,11 @@ export default class AudioOcclusion {
       const roomPortalInfoList = roomPortals
         .filter(portal => !isBitSet(portal.flags, 1) && !isBitSet(portal.flags, 2))
         .map((portal, index) => {
-          const portalEntityList = this.portalsEntities[portal.index];
+          let portalEntityList = this.portalsEntities[portal.index];
+          if (this.portalsEntities[portal.index].some(e=>e.isDoor)) // if there are doors, there should be no windows?
+          {
+            portalEntityList = this.portalsEntities[portal.index].filter(e=>e.isDoor);
+          }
 
           const portalInfo = {
             index: portal.index,
