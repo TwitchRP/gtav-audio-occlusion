@@ -26,6 +26,20 @@ export const TableContainer = styled.section`
       border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
 
+    .entity_model {
+      font-family: monospace;
+    }
+
+    td > .hash_dec {
+      font-family: monospace;
+      text-align: right;
+    }
+
+    td > .hash_hex {
+      font-family: monospace;
+      text-align: right;
+    }
+
     tr:last-child > td {
       border: none;
     }

@@ -45,6 +45,16 @@ const PortalsEntities = () => {
     })();
   }, []);
 
+  const [hashFormatHex, setHashFormatHex] = useState<boolean>(true);
+
+  const formatHash = (format :boolean, hash_value :number) => { return hash_value ? (
+      format ?
+        <span className="hash_hex">0x{((hash_value)>>>0).toString(16).toUpperCase()}</span>
+      :
+        <span className="hash_dec">{hash_value.toString(10)}</span>
+      ):<span></span>
+  }
+
   return (
     <>
       <h1>Portals Entities</h1>
@@ -83,7 +93,7 @@ const PortalsEntities = () => {
                       />
                     </td>
                     <td>{entity.name ? entity.name : null}</td>
-                    <td>{((entity.entityModelHashkey)>>>0).toString(16).toUpperCase()} ({((entity.entityModelHashkey)>>>0)})</td>
+                    <td onClick={e => {setHashFormatHex(!hashFormatHex)}}>{formatHash(hashFormatHex, entity.entityModelHashkey)}</td>
                     <td>
                       <input
                         type="checkbox"
