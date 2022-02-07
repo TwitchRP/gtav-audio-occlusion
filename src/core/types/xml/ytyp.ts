@@ -3,6 +3,7 @@ import { XMLDataEntry, XMLEntry } from './index';
 interface CEntityDef {
   $: { type: string };
   archetypeName: string;
+  flags: XMLDataEntry<{ value: string }>;
 }
 
 interface CMloRoomDef {

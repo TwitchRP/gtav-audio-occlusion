@@ -1,4 +1,4 @@
-import { convertToInt32, joaat, isCMloArchetypeDef } from '../../utils';
+import { convertToInt32, joaat, isCMloArchetypeDef, isBitSet } from '../../utils';
 
 import * as XML from '../../types/xml';
 
@@ -46,8 +46,9 @@ export class CMloArchetypeDef {
         hash = joaat(rawMloEntity.archetypeName);
       }
 
-      const isDoor = rawMloEntity.archetypeName.includes('door');
-      const isGlass = rawMloEntity.archetypeName.includes('glass') || rawMloEntity.archetypeName.includes('window');
+      const flags = parseInt(rawMloEntity.flags.$.value);
+      const isDoor = !isBitSet(flags, 5) && isBitSet(flags, 19) && isBitSet(flags, 20);
+      const isGlass = isBitSet(flags, 5) && isBitSet(flags, 19) && isBitSet(flags, 20);
 
       return {
         name,
